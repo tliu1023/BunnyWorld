@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,7 +91,6 @@ public class EditScript extends Activity {
                     String triggerSelected = parent.getSelectedItem().toString();
                     switch (triggerSelected) {
                         case "on drop":
-
                             ///////////////////////////////////////////////
                             // there is a bug with currShape
                             // when click on another shape, the currshape will lost
@@ -164,7 +164,6 @@ public class EditScript extends Activity {
                             nameSpinner.setAdapter(shapeNameAdapter);
                             break;
                     }
-
                 }
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
@@ -269,24 +268,34 @@ public class EditScript extends Activity {
             saveScriptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Page p = d.curPage;
                     Shape currShape = d.curPage.getSelectedShape();
                     currShape.setScript(currentSentence);
+
+                    HashSet<String> relatedshapes = d.curPage.relatedShapes;
+                    System.out.println("RelatedShapes: " + relatedshapes.toString());
                     System.out.println("Page Name: " + d.curPage.name);
+                    System.out.println("Current Shape: " + currShape.getId());
                     for (String scriptName : scriptMap.keySet()) {
                         String[] sentence = scriptMap.get(scriptName);
                         if (!String.valueOf(sentence[1]).equals("drop") && sentence.length % 2 == 0) {
-
                             for (int ix = 3; ix <= sentence.length - 1; ix += 2) {
                                 if (String.valueOf(sentence[ix - 1]).equals("goto") || String.valueOf(sentence[ix - 1]).equals("hide") || String.valueOf(sentence[ix - 1]).equals("show")) {
-                                    mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
-                                }
+                                    // mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
+                                    relatedshapes.add(String.valueOf(sentence[ix]));
+                            }
                             }
                         } else {
                             for (int ix = 2; ix <= sentence.length - 1; ix += 2) {
-                                mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
+                                // mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
+                                relatedshapes.add(String.valueOf(sentence[ix]));
                             }
                         }
                     }
+                    p.setRelatedShapes(relatedshapes);
+                    p.setSelectedShape(currShape);
+                    mySingleton.getInstance().setCurPage(p);
+
                     Intent intent = new Intent(EditScript.this, EditMain.class);
                     finish();
                     startActivity(intent);
@@ -294,7 +303,6 @@ public class EditScript extends Activity {
             });
         }
     }
-
     String[] getChoice(){
         String[] sentence = null;
         if (sanityCheck()){

@@ -19,6 +19,13 @@ public class Page implements Serializable {
     public HashSet<String> relatedShapes;
     public int backgroundId = 2131230816;
 
+    public HashSet<String> getRelatedShapes() {
+        return relatedShapes;
+    }
+
+    public void setRelatedShapes(HashSet<String> relatedShapes) {
+        this.relatedShapes = relatedShapes;
+    }
 
     public Page(String name) {
         this.name = name;
