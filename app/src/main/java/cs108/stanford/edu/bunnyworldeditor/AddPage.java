@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +16,6 @@ public class AddPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_add_page);
         setTitle("Add Page");
-
         // Set pop window size
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -25,31 +25,29 @@ public class AddPage extends AppCompatActivity {
     }
 
     public void onAddNewPage(View view){
-        EditText newPageName = (EditText) findViewById(R.id.newPageName);
+        EditText newPageName = findViewById(R.id.newPageName);
         String name = newPageName.getText().toString();
-        Docs d = mySingleton.getInstance().docStored;
-        Intent intent = new Intent(this, EditMain.class);
-
-        if(name.length() == 0){
-            //default
-            int i = 2;
-            while(d.pageDict.containsKey("page"+String.valueOf(i))){
-                i++;
-            }
-            name="page"+String.valueOf(i);
+        // page name sanity check
+        if(name.trim().isEmpty()){
+            int id = mySingleton.getInstance().getDocStored().pageDict.size() + 1;
+            name = "page" + id;
         }
         try{
+            Docs d = mySingleton.getInstance().getDocStored();
             d.addPage(name);
+            mySingleton.getInstance().setDocStored(d);
         }catch (Exception e){
-            System.out.println(e.getStackTrace());
+            Toast.makeText(this, "Cannot add page", Toast.LENGTH_SHORT).show();
         }
+
+        Intent intent = new Intent(this, EditMain.class);
         finish();
         startActivity(intent);
     }
 
     public void onCancelAdding(View view){
         Intent intent = new Intent(this, EditMain.class);
+        finish();
         startActivity(intent);
     }
 }
-
