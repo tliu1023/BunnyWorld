@@ -475,8 +475,7 @@ public class Docs implements Serializable {
             curPage.setSelectedShape(null);
         }
     }
-
-
+    
     public void renameShape(Shape shape, String newName) throws Exception {
         if (curPage == null) {
             throw new Exception("No current page");
@@ -572,7 +571,6 @@ public class Docs implements Serializable {
         return newScripts;
     }
 
-
     public void updateScriptRelatedToPage(Page page, String mode, String newName){
         HashSet<String> relatedShapes = page.relatedShapes;
         if (relatedShapes == null) {
@@ -661,7 +659,6 @@ public class Docs implements Serializable {
         return newScripts;
     }
 
-
     public Page getCurPage() {
         return curPage;
     }
@@ -703,7 +700,5 @@ public class Docs implements Serializable {
             }
         }
     }
-
-
 
 }
