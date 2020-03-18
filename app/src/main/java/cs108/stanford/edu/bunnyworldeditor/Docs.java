@@ -579,11 +579,11 @@ public class Docs implements Serializable {
             return;
         }
         for (String name: relatedShapes) {
-            Shape relatedShape = mySingleton.getInstance().shapeDict.get(name);
+            Shape relatedShape = mySingleton.getInstance().getDocStored().shapeDict.get(name);
             if (relatedShape != null) {
                 String scripts = relatedShape.getScript();
                 String new_scripts = updateScriptByPageName(mode, name, newName, scripts);
-                mySingleton.getInstance().shapeDict.get(name).setScript(new_scripts);
+                mySingleton.getInstance().getDocStored().shapeDict.get(name).setScript(new_scripts);
             }
         }
 
@@ -678,13 +678,13 @@ public class Docs implements Serializable {
         }
         String name = shape.id;
         for (String relatedShapeName: relatedShapes) {
-            Shape relatedShape = mySingleton.getInstance().shapeDict.get(relatedShapeName);
+            Shape relatedShape = mySingleton.getInstance().getDocStored().shapeDict.get(relatedShapeName);
             relatedShape.relatedShapes.remove(name);
             relatedShape.relatedShapes.add(newName);
             if (relatedShape != null) {
                 String scripts = relatedShape.getScript();
                 String newScripts = updateScriptByShapeName("rename", name, newName, scripts);
-                mySingleton.getInstance().shapeDict.get(name).setScript(newScripts);
+                mySingleton.getInstance().getDocStored().shapeDict.get(name).setScript(newScripts);
             }
 
         }
