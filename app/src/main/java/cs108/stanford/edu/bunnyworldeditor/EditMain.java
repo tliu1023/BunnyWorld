@@ -85,6 +85,7 @@ public class EditMain extends AppCompatActivity {
                 Docs temp = mySingleton.getInstance().docStored;
                 temp.isSaved = false;
                 mySingleton.getInstance().setDocStored(temp);
+                finish();
                 startActivity(new Intent(EditMain.this, GotoPage.class));
             }
         });
@@ -107,6 +108,7 @@ public class EditMain extends AppCompatActivity {
                 Docs temp = mySingleton.getInstance().docStored;
                 temp.isSaved = false;
                 mySingleton.getInstance().setDocStored(temp);
+                finish();
                 startActivity(new Intent(EditMain.this, AddPage.class));
             }
         });
@@ -118,6 +120,7 @@ public class EditMain extends AppCompatActivity {
                     Docs temp = mySingleton.getInstance().docStored;
                     temp.isSaved = false;
                     mySingleton.getInstance().setDocStored(temp);
+                    finish();
                     startActivity(new Intent(EditMain.this, EditPage.class));
                 }
             }
@@ -154,6 +157,9 @@ public class EditMain extends AppCompatActivity {
         clearShape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ///////////////////////////
+                // need to change
+                // only clear current page
                 Docs newDocs = mySingleton.getInstance().docStored;
                 newDocs.shapeDict = new HashMap<>();
                 newDocs.curPage.shapes = new ArrayList<>();
