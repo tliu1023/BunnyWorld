@@ -359,19 +359,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditPage extends AppCompatActivity {
-    int bgId;
     Button closeButton;
     AlertDialog.Builder builder;
     Docs d = mySingleton.getInstance().getDocStored();
     Page currPage = d.getCurPage();
+    int bgId = currPage.getBackgroundId();
+    boolean isChangeBackground = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialoig_edit_page);
-
         setTitle("Page Editor");
 
+
+        // setup the layout in the listView
         Resources res = getResources();
         String imageNames[] = {"bg1", "bg2", "bg3", "bg4", "bg5"};
         final EditPage.pageViewData[] pageViewList = new EditPage.pageViewData[imageNames.length];
@@ -403,11 +405,15 @@ public class EditPage extends AppCompatActivity {
         ListView pageListView = findViewById(R.id.pageBackgroundListView);
         pageListView.setAdapter(adapter);
 
+
+        // select one background
         pageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("position:" + position);
                 EditPage.pageViewData currentData = pageViewList[position];
                 bgId=currentData.imageId;
+                isChangeBackground = true;
                 String toShow = "Selected background "+currentData.imageName+".";
                 Toast.makeText(EditPage.this, toShow, Toast.LENGTH_SHORT).show();
             }
@@ -436,8 +442,8 @@ public class EditPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String message = "Are you sure to delete this page?";
-                String title = "Delete Page Alert";
-                builder.setMessage(message) .setTitle(title);
+                String title = "Delete Page";
+                builder.setTitle(title);
 
                 //Setting message manually and performing action on button click
                 builder.setMessage(message);
@@ -445,16 +451,19 @@ public class EditPage extends AppCompatActivity {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
+                            /////////////////////////////////
+                            // go back later
+                            // a little confused
                             d.delPage(currPage.getName());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                         mySingleton.getInstance().setDocStored(d);
+                        Toast.makeText(getApplicationContext(), "Page deleted.", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(EditPage.this, EditMain.class);
-                        Toast.makeText(getApplicationContext(), "Page deleted.",
-                                Toast.LENGTH_SHORT).show();
+                        finish();
                         startActivity(intent);
 
                     }
@@ -484,11 +493,7 @@ public class EditPage extends AppCompatActivity {
     }
 
     public void savePage(View view){
-        //set background image id
-        if(bgId != 2131230816){
-            if (mySingleton.getInstance().getDocStored().getCurPage().getName()!= "page1")  {
-                System.out.println("invalid menu option");
-            }
+        if(isChangeBackground){
             currPage.setBackgroundId(bgId);
         }
 
@@ -498,14 +503,16 @@ public class EditPage extends AppCompatActivity {
         if(!editedNameStr.trim().isEmpty()){
             if (!String.valueOf(currPage.getName()).equals(editedNameStr)) {
                 try {
+                    // rename the page and all related script
+                    // go back later
                     d.renamePage(currPage, editedNameStr);
-                    //go back
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }
 
+        // save the change in the docs
         mySingleton.getInstance().setDocStored(d);
 
         Intent intent = new Intent(EditPage.this, EditMain.class);
