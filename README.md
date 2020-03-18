@@ -1,2 +1,2 @@
 # BunnyWorld
-An Android app for a creating &amp; playing BunnyWorld Game
+An Android app for creating &amp; playing BunnyWorld Game
