@@ -1,16 +1,8 @@
 package cs108.stanford.edu.bunnyworldeditor;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -79,37 +73,6 @@ public class DrawActivity extends AppCompatActivity {
         );
 
     }
-    /*
-    private void changeEraserWidth() {
-
-        AlertDialog.Builder changeLinewidthDialog= new AlertDialog.Builder(DrawActivity.this);
-        View dialogView = LayoutInflater.from(DrawActivity.this).inflate(R.layout.dialog_draweraserwidth,
-                null);
-        changeLinewidthDialog.setTitle("Eraser Width");
-        changeLinewidthDialog.setView(dialogView);
-
-        SeekBar seekbar_eraserWidth = dialogView.findViewById(R.id.seekbar_eraserWidth);
-        seekbar_eraserWidth.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        eraseWidth = (float) progress;
-                        color_b = 255;
-                        color_g = 255;
-                        color_r = 255;
-                        savePaintChange();
-                    }
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                    }
-                }
-        );
-        changeLinewidthDialog.show();
-    }
-    */
     private void changeLinewidth() {
         AlertDialog.Builder changeLinewidthDialog= new AlertDialog.Builder(DrawActivity.this);
         View dialogView = LayoutInflater.from(DrawActivity.this).inflate(R.layout.dialog_drawchangelinewidth,
