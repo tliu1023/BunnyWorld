@@ -351,26 +351,22 @@
 package cs108.stanford.edu.bunnyworldeditor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 public class Docs implements Serializable {
+    // to do change all parameter to private
     public HashMap<String, Shape> shapeDict;
     public HashMap<String, Page> pageDict;
-    public ArrayList<Shape> possession;
-    public ArrayList<String> imageList;
     public Page curPage;
     public boolean isEdit;
     public boolean isSaved;
 
     public Docs(){
-        shapeDict = new HashMap<String, Shape>();
-        possession = new ArrayList<Shape>();
-        pageDict = new HashMap<String, Page>();
-        imageList = new ArrayList<String> ();
+        shapeDict = new HashMap<>();
+        pageDict = new HashMap<>();
         Page page1 = new Page("page1");
         pageDict.put("page1", page1);
         curPage = page1;
