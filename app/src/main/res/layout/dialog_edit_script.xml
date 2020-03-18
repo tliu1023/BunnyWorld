@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cs108.stanford.edu.bunnyworldeditor.EditScript">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/triggerText"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:text="Trigger:"/>
+        <Spinner
+            android:id="@+id/trigSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:entries="@array/trigger_arrays"
+            android:layout_weight="1">
+        </Spinner>
+        <TextView
+            android:id="@+id/actionText"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:text="Action:" />
+        <Spinner
+            android:id="@+id/actionSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:prompt="@string/img_prompt"
+            android:entries="@array/action_arrays"
+            android:layout_weight="1">
+        </Spinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/dropText"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:text="On Drop Shape:" />
+        <Spinner
+            android:id="@+id/onDropSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:prompt="@string/img_prompt"
+            android:layout_weight="1">
+        </Spinner>
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:text="Name:" />
+        <Spinner
+            android:id="@+id/chooseNameSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="8mm"
+            android:prompt="@string/img_prompt"
+            android:layout_weight="1">
+        </Spinner>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="4mm"
+        android:text="Script:"
+        android:layout_gravity="center|center_vertical"/>
+
+    <TextView
+        android:id="@+id/script_output"
+        android:layout_width="match_parent"
+        android:layout_height="8mm" />
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/save_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="SAVE"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/add_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="ADD"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/clear_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="CLEAR"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/cancel_script"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="CANCEL"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

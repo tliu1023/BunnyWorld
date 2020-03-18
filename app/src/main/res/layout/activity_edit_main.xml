@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="cs108.stanford.edu.bunnyworldeditor.EditMain">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/page_name"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="" />
+        <cs108.stanford.edu.bunnyworldeditor.PageView
+            android:layout_width="86mm"
+            android:layout_height="59mm"
+            android:id="@+id/pageView"/>
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="20mm"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_gotoPage"
+                android:text = "Go to Page"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_addPage"
+                android:text = "Add Page"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_editPage"
+                android:text = "Edit Page"
+                android:onClick="editPage"
+                tools:ignore="OnClick" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_addShape"
+                android:text = "Add Shape"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_editShape"
+                android:text="Edit Shape" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_script"
+                android:text="Script"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_copyShape"
+                android:text="Copy"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_clear"
+                android:text="Clear"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_draw"
+                android:text="Draw"
+                android:onClick="drawShape"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_saveData"
+                android:text="Save Data"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

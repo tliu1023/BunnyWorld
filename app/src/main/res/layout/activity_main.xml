@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/welcome_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Welcome to BunnyWorld! "
+        android:textColor="@color/colorPrimary"
+        android:textSize="36sp"
+        android:textStyle="italic"
+        app:fontFamily="@font/alfa_slab_one" />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@id/welcome_message">
+
+        <Button
+            android:id="@+id/start_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onStart"
+            android:text="START GAME"
+            android:typeface="monospace" />
+
+        <Button
+            android:id="@+id/create_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onStartEditor"
+            android:text="CREATE GAME"
+            android:typeface="monospace" />
+
+    </LinearLayout>
+
+</RelativeLayout>

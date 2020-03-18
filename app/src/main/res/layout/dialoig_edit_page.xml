@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="3"
+    android:rowCount="3">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Page Name"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:layout_rowWeight="1"
+        android:layout_gravity="center"
+        />
+
+    <EditText
+        android:id="@+id/newPageName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter the new page name"
+        android:layout_column="1"
+        android:layout_row="0"
+        android:layout_columnSpan="2"
+        android:layout_rowWeight="1"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Backgound"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:layout_rowWeight="20"
+        android:layout_gravity="center"/>
+
+    <ListView
+        android:id="@+id/pageBackgroundListView"
+        android:layout_width="281dp"
+        android:layout_height="0dp"
+        android:layout_row="1"
+        android:layout_rowWeight="5"
+        android:layout_column="1"
+        android:layout_columnSpan="2"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Change"
+        android:onClick="onChangePage"
+        android:layout_row="2"
+        android:layout_column="0"
+        android:layout_rowWeight="1"/>
+
+    <Button
+        android:id="@+id/button_delete_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Page"
+        android:onClick="onDeletePage"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:layout_rowWeight="1"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:onClick="onCancel"
+        android:layout_row="2"
+        android:layout_column="2"
+        android:layout_rowWeight="1"/>
+</GridLayout>

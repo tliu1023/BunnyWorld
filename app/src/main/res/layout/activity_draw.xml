@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DrawActivity"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_drawColor"
+            android:text="Color" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_drawLinewidth"
+            android:text="Linewidth"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_drawEraser"
+            android:text = "Eraser"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_drawSave"
+            android:text = "Save"
+            android:onClick="saveShape"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_drawClear"
+            android:text="Clear"
+            android:onClick="clearCanvas"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_showLast"
+            android:text="Show Last"
+            android:onClick="showLastShape"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <cs108.stanford.edu.bunnyworldeditor.DrawableView
+            android:layout_marginLeft="2mm"
+            android:layout_width="40mm"
+            android:layout_height="40mm"
+            android:id="@+id/drawCanvas"/>
+        <ImageView
+            android:layout_toRightOf="@+id/drawCanvas"
+            android:layout_width="40mm"
+            android:layout_height="40mm"
+            android:layout_marginLeft="10mm"
+            android:id="@+id/imageView_showLast"/>
+    </LinearLayout>
+
+</LinearLayout>

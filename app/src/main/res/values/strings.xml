@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">BunnyWorldEditor</string>
+    <string name="title_activity_draw">DrawActivity</string>
+    <string name="trigger_prompt">Choose Trigger</string>
+    <string-array name="trigger_arrays">
+        <item>on click</item>
+        <item>on enter</item>
+        <item>on drop</item>
+    </string-array>
+
+    <string-array name="action_arrays">
+        <item>goto</item>
+        <item>play</item>
+        <item>hide</item>
+        <item>show</item>
+    </string-array>
+
+
+    <string name="action_prompt">Choose Action</string>
+    <string name="img_prompt">Choose Image</string>
+</resources>
