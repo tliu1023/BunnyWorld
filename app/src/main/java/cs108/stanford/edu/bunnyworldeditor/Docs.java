@@ -670,6 +670,14 @@ public class Docs implements Serializable {
         this.curPage = curPage;
     }
 
+    public HashMap<String, Page> getPageDict() {
+        return pageDict;
+    }
+
+    public void setPageDict(HashMap<String, Page> pageDict) {
+        this.pageDict = pageDict;
+    }
+
     public void updateScriptRelatedToShape(Shape shape, String newName){
         // update the script of the shapes related to the given shape
         HashSet<String> relatedShapes = shape.relatedShapes;
