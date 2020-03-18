@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GotoPage extends AppCompatActivity {
     public Spinner pageSpinner;
@@ -30,9 +29,11 @@ public class GotoPage extends AppCompatActivity {
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width * 0.8), (int)(height * 0.3));
 
-        pageSpinner = (Spinner) findViewById(R.id.pageSpinner);
-        List<String> pageNames = new ArrayList<>(mySingleton.getInstance().docStored.pageDict.keySet());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, pageNames);
+        pageSelected = mySingleton.getInstance().getDocStored().getCurPage().getName();
+
+        pageSpinner = findViewById(R.id.pageSpinner);
+        ArrayList<String> pageNames = new ArrayList<>(mySingleton.getInstance().docStored.pageDict.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pageNames);
         pageSpinner.setPrompt("Go to Page");
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pageSpinner.setAdapter(adapter);
@@ -48,13 +49,18 @@ public class GotoPage extends AppCompatActivity {
     }
 
     public void onGotoPage(View view){
-        mySingleton.getInstance().docStored.curPage = mySingleton.getInstance().docStored.pageDict.get(pageSelected);
+        Docs d = mySingleton.getInstance().getDocStored();
+        d.setCurPage(d.getPageDict().get(pageSelected));
+        mySingleton.getInstance().setDocStored(d);
+
         Intent intent = new Intent(this, EditMain.class);
+        finish();
         startActivity(intent);
     }
 
     public void onCancelGoto(View view){
         Intent intent = new Intent(this, EditMain.class);
+        finish();
         startActivity(intent);
     }
 }
