@@ -338,11 +338,6 @@
 //    }
 //
 //}
-
-
-
-
-
 package cs108.stanford.edu.bunnyworldeditor;
 
 import android.content.DialogInterface;
@@ -367,6 +362,9 @@ public class EditPage extends AppCompatActivity {
     int bgId;
     Button closeButton;
     AlertDialog.Builder builder;
+    Docs d = mySingleton.getInstance().getDocStored();
+    Page currPage = d.getCurPage();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -394,15 +392,15 @@ public class EditPage extends AppCompatActivity {
                                     .inflate(R.layout.edit_shape_view, null, false);
                         }
 
-                        ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-                        TextView imageName = (TextView) convertView.findViewById(R.id.imageName);
+                        ImageView imageView = convertView.findViewById(R.id.image);
+                        TextView imageName = convertView.findViewById(R.id.imageName);
                         imageView.setImageResource(currentData.imageId);
                         imageName.setText(currentData.imageName);
 
                         return convertView;
                     }
                 };
-        ListView pageListView = (ListView) findViewById(R.id.pageBackgroundListView);
+        ListView pageListView = findViewById(R.id.pageBackgroundListView);
         pageListView.setAdapter(adapter);
 
         pageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -416,8 +414,8 @@ public class EditPage extends AppCompatActivity {
         });
 
         // show current page name
-        EditText editedName = (EditText) findViewById(R.id.newPageName);
-        editedName.setText(mySingleton.getInstance().docStored.curPage.name);
+        EditText editedName = findViewById(R.id.newPageName);
+        editedName.setText(mySingleton.getInstance().getDocStored().getCurPage().getName());
     }
 
     public class pageViewData{
@@ -432,7 +430,7 @@ public class EditPage extends AppCompatActivity {
 
 
     public void onDeletePage(View view) {
-        closeButton = (Button) findViewById(R.id.button_delete_page);
+        closeButton = findViewById(R.id.button_delete_page);
         builder = new AlertDialog.Builder(this);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -446,12 +444,13 @@ public class EditPage extends AppCompatActivity {
                 builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Page page = mySingleton.getInstance().docStored.curPage;
                         try {
-                            mySingleton.getInstance().docStored.delPage(mySingleton.getInstance().docStored.curPage.name);
+                            d.delPage(currPage.getName());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+                        mySingleton.getInstance().setDocStored(d);
 
                         Intent intent = new Intent(EditPage.this, EditMain.class);
                         Toast.makeText(getApplicationContext(), "Page deleted.",
@@ -480,35 +479,37 @@ public class EditPage extends AppCompatActivity {
 
     public void onCancel(View view){
         Intent intent = new Intent(EditPage.this, EditMain.class);
+        finish();
         startActivity(intent);
     }
 
-    public void onChangePage(View view){
+    public void savePage(View view){
         //set background image id
         if(bgId != 2131230816){
-            if (mySingleton.getInstance().docStored.curPage.name!= "page1")  {
+            if (mySingleton.getInstance().getDocStored().getCurPage().getName()!= "page1")  {
                 System.out.println("invalid menu option");
             }
-            mySingleton.getInstance().docStored.curPage.backgroundId = bgId;
+            currPage.setBackgroundId(bgId);
         }
 
-        Intent intent = new Intent(EditPage.this, EditMain.class);
         //set new page name
-        EditText editedName = (EditText) findViewById(R.id.newPageName);
+        EditText editedName = findViewById(R.id.newPageName);
         String editedNameStr = editedName.getText().toString();
-        if(editedNameStr.length() != 0){
-            if (!String.valueOf(mySingleton.getInstance().docStored.curPage.name).equals(editedNameStr)) {
+        if(!editedNameStr.trim().isEmpty()){
+            if (!String.valueOf(currPage.getName()).equals(editedNameStr)) {
                 try {
-                    mySingleton.getInstance().docStored.renamePage(mySingleton.getInstance().docStored.curPage,
-                            editedNameStr);
+                    d.renamePage(currPage, editedNameStr);
                     //go back
-                    startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }
+
+        mySingleton.getInstance().setDocStored(d);
+
+        Intent intent = new Intent(EditPage.this, EditMain.class);
+        finish();
         startActivity(intent);
     }
-
 }
