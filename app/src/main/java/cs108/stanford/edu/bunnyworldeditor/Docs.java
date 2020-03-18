@@ -475,7 +475,7 @@ public class Docs implements Serializable {
             curPage.setSelectedShape(null);
         }
     }
-    
+
     public void renameShape(Shape shape, String newName) throws Exception {
         if (curPage == null) {
             throw new Exception("No current page");
