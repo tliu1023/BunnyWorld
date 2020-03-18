@@ -294,7 +294,8 @@ public class EditScript extends Activity {
                     }
                     p.setRelatedShapes(relatedshapes);
                     p.setSelectedShape(currShape);
-                    mySingleton.getInstance().setCurPage(p);
+                    d.setCurPage(p);
+                    mySingleton.getInstance().setDocStored(d);
 
                     Intent intent = new Intent(EditScript.this, EditMain.class);
                     finish();
