@@ -25,7 +25,7 @@ public class GameActivity extends AppCompatActivity {
     protected static CountDownTimer countDownTimer;
     protected TextView pointsText;
     protected TextView timerText;
-    protected long timeLeftInMilliseconds = 5000; // 5min
+    protected long timeLeftInMilliseconds = 120000; // 2min
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void startTimer() {
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 100000) {
+        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerText.setText(millisUntilFinished/1000 + " sec");
