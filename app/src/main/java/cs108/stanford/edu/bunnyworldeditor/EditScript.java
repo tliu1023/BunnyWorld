@@ -39,9 +39,6 @@ public class EditScript extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_edit_script);
 
-        ///////////////////////////////////////
-        // how to track the curPage?
-        ///////////////////////////////////////
         d = mySingleton.getInstance().docStored;
         currShape = d.curPage.getSelectedShape();
 
@@ -93,17 +90,6 @@ public class EditScript extends AppCompatActivity {
                     String triggerSelected = parent.getSelectedItem().toString();
                     switch (triggerSelected) {
                         case "on drop":
-                            ///////////////////////////////////////////////
-                            // there is a bug with currShape
-                            // when click on another shape, the currshape will lost
-//                            ArrayList<Shape> shapes = d.curPage.getShapes();
-//                            String[] shapeNameList = new String[shapes.size() - 1];
-//                            for(int i = 0; i < shapes.size()-1; i++){
-//                                if(!currShape.getId().equals(shapes.get(i).getId())){
-//                                    shapeNameList[i] = shapes.get(i).getId();
-//                                }
-//                            }
-                            ///////////////////////////////////////////////
                             ArrayList<Shape> shapeNameSet = d.getCurPage().getShapes();
                             String[] shapeNameList = new String[shapeNameSet.size()];
                             for(int i = 0; i < shapeNameSet.size(); i++){
@@ -151,17 +137,6 @@ public class EditScript extends AppCompatActivity {
                             break;
                         case "hide":
                         case "show":
-                            ///////////////////////////////////////////////
-                            // there is a bug with currShape
-                            // when click on another shape, the currshape will lost
-//                            ArrayList<Shape> shapes = d.curPage.getShapes();
-//                            String[] shapeNameList = new String[shapes.size() - 1];
-//                            for(int i = 0; i < shapes.size()-1; i++){
-//                                if(!currShape.getId().equals(shapes.get(i).getId())){
-//                                    shapeNameList[i] = shapes.get(i).getId();
-//                                }
-//                            }
-                            ///////////////////////////////////////////////
                             Set<String> shapeNameSet = d.shapeDict.keySet();
                             String[] shapeNameList = shapeNameSet.toArray(new String[shapeNameSet.size()]);
                             ArrayAdapter<String> shapeNameAdapter = new ArrayAdapter<String>(view.getContext(),
@@ -177,55 +152,43 @@ public class EditScript extends AppCompatActivity {
             addScriptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String[] scriptArray = getChoice();
-                    if (scriptArray != null) {
+                String[] scriptArray = getChoice();
+                if (scriptArray != null) {
 
-                        // get first to word, headerAdded
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(scriptArray[0]);
+                    // get first to word, headerAdded
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(scriptArray[0]);
+                    sb.append(" ");
+                    sb.append(scriptArray[1]);
+                    if (String.valueOf(scriptArray[1]).equals("drop")) {
                         sb.append(" ");
-                        sb.append(scriptArray[1]);
-                        if (String.valueOf(scriptArray[1]).equals("drop")) {
-                            sb.append(" ");
-                            sb.append(scriptArray[2]);
-                        }
-                        String headerAdded = sb.toString();
-                        boolean newInsert = true;
+                        sb.append(scriptArray[2]);
+                    }
+                    String headerAdded = sb.toString();
+                    boolean newInsert = true;
 
-                        for (Map.Entry<String, String[]> entry : scriptMap.entrySet()) {
-                            String headKey = entry.getKey();
-                            String[] orig = entry.getValue();
-                            if (headKey.matches(headerAdded)) {
-                                newInsert = false;
+                    for (Map.Entry<String, String[]> entry : scriptMap.entrySet()) {
+                        String headKey = entry.getKey();
+                        String[] orig = entry.getValue();
+                        if (headKey.matches(headerAdded)) {
+                            newInsert = false;
 
-                                String[] newSentence = new String[orig.length + 2];
+                            String[] newSentence = new String[orig.length + 2];
 
-                                for (int i = 0; i < orig.length; i++) {
-                                    newSentence[i] = orig[i];
-                                }
-                                if (!String.valueOf(scriptArray[1]).equals("drop")) {
-                                    newSentence[orig.length] = scriptArray[2];
-                                    newSentence[orig.length + 1] = scriptArray[3];
-                                } else {
-                                    newSentence[orig.length] = scriptArray[3];
-                                    newSentence[orig.length + 1] = scriptArray[4];
-                                }
-
-                                scriptMap.put(headKey, newSentence);
-                                StringBuilder sb1 = new StringBuilder();
-
-                                for (String key : scriptMap.keySet()) {
-                                    String[] sentence = scriptMap.get(key);
-                                    sb1.append(joinString(sentence, " "));
-                                    sb1.append(";");
-                                }
-                                currentSentence = sb1.toString();
+                            for (int i = 0; i < orig.length; i++) {
+                                newSentence[i] = orig[i];
                             }
-                        }
+                            if (!String.valueOf(scriptArray[1]).equals("drop")) {
+                                newSentence[orig.length] = scriptArray[2];
+                                newSentence[orig.length + 1] = scriptArray[3];
+                            } else {
+                                newSentence[orig.length] = scriptArray[3];
+                                newSentence[orig.length + 1] = scriptArray[4];
+                            }
 
-                        if (newInsert) {
-                            scriptMap.put(headerAdded, scriptArray);
+                            scriptMap.put(headKey, newSentence);
                             StringBuilder sb1 = new StringBuilder();
+
                             for (String key : scriptMap.keySet()) {
                                 String[] sentence = scriptMap.get(key);
                                 sb1.append(joinString(sentence, " "));
@@ -233,78 +196,81 @@ public class EditScript extends AppCompatActivity {
                             }
                             currentSentence = sb1.toString();
                         }
-                        showScript.setText(currentSentence);
                     }
+
+                    if (newInsert) {
+                        scriptMap.put(headerAdded, scriptArray);
+                        StringBuilder sb1 = new StringBuilder();
+                        for (String key : scriptMap.keySet()) {
+                            String[] sentence = scriptMap.get(key);
+                            sb1.append(joinString(sentence, " "));
+                            sb1.append(";");
+                        }
+                        currentSentence = sb1.toString();
+                    }
+                    showScript.setText(currentSentence);
+                }
                 }
             });
 
             clearScriptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (currShape.getScript().isEmpty()) {
-//                        if (currentSentence.isEmpty()) {
-//                            Toast.makeText(v.getContext(), "Already Empty", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(v.getContext(), "Not Saved, already Empty", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {
-                    scriptMap.clear();
-                    currentSentence = "";
-                    currShape.setScript(currentSentence);
-                    showScript.setText(currentSentence);
-                    Toast.makeText(v.getContext(), "Already Empty", Toast.LENGTH_SHORT).show();
-//                    }
+                scriptMap.clear();
+                currentSentence = "";
+                currShape.setScript(currentSentence);
+                showScript.setText(currentSentence);
+                Toast.makeText(v.getContext(), "Already Empty", Toast.LENGTH_SHORT).show();
                 }
             });
 
             cancelScriptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    scriptMap.clear();
-                    currentSentence = "";
-                    showScript.setText(currentSentence);
-                    Intent intent = new Intent(EditScript.this, EditMain.class);
-                    finish();
-                    startActivity(intent);
-
+                scriptMap.clear();
+                currentSentence = "";
+                showScript.setText(currentSentence);
+                Intent intent = new Intent(EditScript.this, EditMain.class);
+                finish();
+                startActivity(intent);
                 }
             });
 
             saveScriptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Page p = d.curPage;
-                    Shape currShape = d.curPage.getSelectedShape();
-                    currShape.setScript(currentSentence);
+                Page p = d.curPage;
+                Shape currShape = d.curPage.getSelectedShape();
+                currShape.setScript(currentSentence);
 
-                    HashSet<String> relatedshapes = d.curPage.relatedShapes;
-                    System.out.println("RelatedShapes: " + relatedshapes.toString());
-                    System.out.println("Page Name: " + d.curPage.name);
-                    System.out.println("Current Shape: " + currShape.getId());
-                    for (String scriptName : scriptMap.keySet()) {
-                        String[] sentence = scriptMap.get(scriptName);
-                        if (!String.valueOf(sentence[1]).equals("drop") && sentence.length % 2 == 0) {
-                            for (int ix = 3; ix <= sentence.length - 1; ix += 2) {
-                                if (String.valueOf(sentence[ix - 1]).equals("goto") || String.valueOf(sentence[ix - 1]).equals("hide") || String.valueOf(sentence[ix - 1]).equals("show")) {
-                                    // mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
-                                    relatedshapes.add(String.valueOf(sentence[ix]));
-                            }
-                            }
-                        } else {
-                            for (int ix = 2; ix <= sentence.length - 1; ix += 2) {
+                HashSet<String> relatedshapes = d.curPage.relatedShapes;
+                System.out.println("RelatedShapes: " + relatedshapes.toString());
+                System.out.println("Page Name: " + d.curPage.name);
+                System.out.println("Current Shape: " + currShape.getId());
+                for (String scriptName : scriptMap.keySet()) {
+                    String[] sentence = scriptMap.get(scriptName);
+                    if (!String.valueOf(sentence[1]).equals("drop") && sentence.length % 2 == 0) {
+                        for (int ix = 3; ix <= sentence.length - 1; ix += 2) {
+                            if (String.valueOf(sentence[ix - 1]).equals("goto") || String.valueOf(sentence[ix - 1]).equals("hide") || String.valueOf(sentence[ix - 1]).equals("show")) {
                                 // mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
                                 relatedshapes.add(String.valueOf(sentence[ix]));
-                            }
+                        }
+                        }
+                    } else {
+                        for (int ix = 2; ix <= sentence.length - 1; ix += 2) {
+                            // mySingleton.getInstance().docStored.curPage.relatedShapes.add(String.valueOf(sentence[ix]));
+                            relatedshapes.add(String.valueOf(sentence[ix]));
                         }
                     }
-                    p.setRelatedShapes(relatedshapes);
-                    p.setSelectedShape(currShape);
-                    d.setCurPage(p);
-                    mySingleton.getInstance().setDocStored(d);
+                }
+                p.setRelatedShapes(relatedshapes);
+                p.setSelectedShape(currShape);
+                d.setCurPage(p);
+                mySingleton.getInstance().setDocStored(d);
 
-                    Intent intent = new Intent(EditScript.this, EditMain.class);
-                    finish();
-                    startActivity(intent);
+                Intent intent = new Intent(EditScript.this, EditMain.class);
+                finish();
+                startActivity(intent);
                 }
             });
         }
@@ -351,18 +317,5 @@ public class EditScript extends AppCompatActivity {
         return join;
 
     }
-
-//    private int getSpinnerIdx(Spinner spinner, String str){
-//        int idx = 0;
-//        for (int i = 0; i < spinner.getCount(); i++){
-//            if (spinner.getItemAtPosition(i) != null){
-//                if(spinner.getItemAtPosition(i).toString().equalsIgnoreCase(str)){
-//                    idx = i;
-//                    break;
-//                }
-//            }
-//        }
-//        return idx;
-//    }
 
 }
