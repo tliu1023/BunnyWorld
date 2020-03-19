@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -103,8 +104,11 @@ public class EditScript extends AppCompatActivity {
 //                                }
 //                            }
                             ///////////////////////////////////////////////
-                            Set<String> shapeNameSet = d.shapeDict.keySet();
-                            String[] shapeNameList = shapeNameSet.toArray(new String[shapeNameSet.size()]);
+                            ArrayList<Shape> shapeNameSet = d.getCurPage().getShapes();
+                            String[] shapeNameList = new String[shapeNameSet.size()];
+                            for(int i = 0; i < shapeNameSet.size(); i++){
+                                shapeNameList[i] = shapeNameSet.get(i).getId();
+                            }
                             ArrayAdapter<String> shapeNameAdapter = new ArrayAdapter<String>(view.getContext(),
                                     android.R.layout.simple_spinner_dropdown_item, shapeNameList);
                             onDropShapeSpinner.setAdapter(shapeNameAdapter);
