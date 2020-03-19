@@ -20,6 +20,7 @@ public class PageView extends View {
     private Shape selectedShape;
     private Context context;
     private int bgId;
+    private Page curPage;
     private Bitmap bgImage;
     private float x1, x2, y1, y2;
     private float pageWidth, pageHeight;
@@ -30,7 +31,7 @@ public class PageView extends View {
         this.pageName = mySingleton.getInstance().getDocStored().getCurPage().getName();
         this.selectedShape = mySingleton.getInstance().getDocStored().getCurPage().getSelectedShape();
         this.pageMap = mySingleton.getInstance().getDocStored().getPageDict();
-        this.shapes = pageMap.get(pageName).getShapes();
+        this.shapes = mySingleton.getInstance().getDocStored().getCurPage().getShapes();
         this.bgId = mySingleton.getInstance().getDocStored().getCurPage().getBackgroundId();
         this.context = getContext();
         this.bgImage = getImage(bgId);
@@ -39,6 +40,7 @@ public class PageView extends View {
         x2 = 0;
         y1 = 0;
         y2 = 0;
+
         pageWidth = 0;
         pageHeight = 0;
     }
@@ -46,13 +48,15 @@ public class PageView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        shapes = pageMap.get(pageName).getShapes();
-
+        shapes = mySingleton.getInstance().getDocStored().getCurPage().getShapes();
+        curPage = mySingleton.getInstance().getDocStored().getCurPage();
+        System.out.println(curPage);
         // draw background
         canvas.drawBitmap(bgImage,null,new RectF(0, 0, pageWidth, pageHeight),null);
         // canvas.setBitmap(bgImage);
         for (Shape shape: shapes) {
             shape.drawPic(canvas, context);
+            System.out.println(shape.toString());
         }
     }
 

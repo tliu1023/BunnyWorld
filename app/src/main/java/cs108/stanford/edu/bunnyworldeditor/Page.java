@@ -19,7 +19,7 @@ public class Page implements Serializable {
     public Page(String name) {
         this.name = name;
         this.selectedShape = null;
-        this.shapes = new ArrayList<Shape> ();
+        this.shapes = new ArrayList<> ();
         this.relatedShapes = new HashSet<> ();
         this.backgroundId = 2131230816;
     }
@@ -61,10 +61,6 @@ public class Page implements Serializable {
 
     public void setBackgroundId(int backgroundId) {
         this.backgroundId = backgroundId;
-    }
-
-    public HashSet<String> getRelatedShapes() {
-        return relatedShapes;
     }
 
     public void setRelatedShapes(HashSet<String> relatedShapes) {
@@ -134,11 +130,4 @@ public class Page implements Serializable {
         }
     }
 
-    /*
-    public void drawPage(Canvas canvas, Context context) {
-        for (Shape shape : shapes) {
-            shape.drawPic(canvas, context);
-        }
-    }
-    */
 }

@@ -17,7 +17,6 @@ public class SaveEditGame extends AppCompatActivity {
 
     SQLiteDatabase db;
     String tableName = "games";
-    boolean isEdit;
     String overwriteGameName;
 
     @Override
@@ -35,68 +34,60 @@ public class SaveEditGame extends AppCompatActivity {
 
         // Determine which table to save to
         Intent intent = getIntent();
-        overwriteGameName = intent.getStringExtra("gameName");
-        ((EditText) findViewById(R.id.saveNameText)).setText(overwriteGameName);
-        isEdit = intent.getBooleanExtra("isEdit", false);
 
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
+        String countNumStr = "SELECT name from " + tableName;
+        Cursor tableCursor = db.rawQuery(countNumStr, null);
+
+        overwriteGameName = "Game" + (tableCursor.getCount()+1);
+        ((EditText) findViewById(R.id.saveNameText)).setText(overwriteGameName);
+        db.close();
     }
 
     public void onSave(View view){
         db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
-        mySingleton.getInstance().docStored.isSaved=true;
-        EditText nameText = findViewById(R.id.saveNameText);
 
+        Docs d = mySingleton.getInstance().getDocStored();
+        d.setSaved(true);
+        mySingleton.getInstance().setDocStored(d);
+
+        EditText nameText = findViewById(R.id.saveNameText);
         String gameName = nameText.getText().toString();
         // Intent intent = getIntent();
         String checkStr = "SELECT name from " + tableName +";";
         Cursor tableCursor = db.rawQuery(checkStr, null);
         while (tableCursor.moveToNext()) {
             if (tableCursor.getString(0).equals(gameName)) {
-                String sqlStr = "DELETE from "
-                        + tableName
-                        + " where name = '"
-                        + gameName
-                        + "';";
+                String sqlStr = "DELETE from " + tableName
+                        + " where name = '" + gameName  + "';";
                 db.execSQL(sqlStr);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Rewriting " + gameName,
-                        Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(this, "Rewriting " + gameName, Toast.LENGTH_SHORT).show();
             }
         }
+        tableCursor.close();
+
         Gson gson = new Gson();
         String json1 = gson.toJson(mySingleton.getInstance().getDocStored().getShapeDict());
         String json2 = gson.toJson(mySingleton.getInstance().getDocStored().getPageDict());
         String json3 = gson.toJson(mySingleton.getInstance().getDocStored().getCurPage());
         String sqlCommand = "INSERT INTO games VALUES ('"
-                + gameName
-                + "','"
-                + json1
-                + "','"
-                + json2
-                + "','"
-                + json3
-                + "',"
-                + 1
-                + ","
-                + 1
-                + ",NULL);";
-        System.err.println(sqlCommand);
+                + gameName + "','"
+                + json1 + "','"
+                + json2 + "','"
+                + json3 + "',"
+                + 1 + ","
+                + 1 + ",NULL);";
         db.execSQL(sqlCommand);
-        System.err.println("Finished");
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Saved to DataBase", Toast.LENGTH_SHORT);
-        toast.show();
-        Intent intent1 = new Intent(SaveEditGame.this,MainActivity.class);
-        startActivity(intent1);
-
+        Toast.makeText(this, "Saved to DataBase", Toast.LENGTH_SHORT).show();
+        finish();
+        startActivity(new Intent(SaveEditGame.this,MainActivity.class));
+        db.close();
     }
 
     public void onCancel(View view){
         // Redirect to the EditMode / PlayMode activity
-        Intent intent;
-        intent = new Intent(this, EditMain.class);
-        startActivity(intent);
+        finish();
+        startActivity(new Intent(this, EditMain.class));
     }
 }
 

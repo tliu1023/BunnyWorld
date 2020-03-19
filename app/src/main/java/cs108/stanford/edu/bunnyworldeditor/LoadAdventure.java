@@ -14,8 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadAdventure extends AppCompatActivity {
-
-
     SQLiteDatabase db;
     String tableName = "games";
     SimpleCursorAdapter adapter;
@@ -23,30 +21,30 @@ public class LoadAdventure extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("Oncreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_adventure);
         setTitle("Adventure Selection");
-        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
         listView = findViewById(R.id.loadListView);
         showSavings(tableName);
     }
 
     public void onCreateNew(View view) {
+        System.out.println("onCreateNew");
         Intent intent = new Intent(this, EditMain.class);
         intent.putExtra("new", true);
         intent.putExtra("fromLoad", false);
         startActivity(intent);
     }
 
-
     public void onLoad(View view){
+        System.out.println("onLoad");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
+
         ListView listView = findViewById(R.id.loadListView);
         int pos = listView.getCheckedItemPosition();
         if(pos == AdapterView.INVALID_POSITION){
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Please select an adventure to edit on.",
-                    Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(this, "Select an adventure to load.", Toast.LENGTH_SHORT).show();
         } else{
             TextView selectedTextView = (TextView) adapter.getView(pos, null, listView);
             String gameName = selectedTextView.getText().toString();
@@ -56,11 +54,11 @@ public class LoadAdventure extends AppCompatActivity {
                     + gameName
                     +"';";
             Cursor tableCursor = db.rawQuery(sqlStr, null);
-            String sd;
-            String pd;
-            String cp;
-            boolean ie;
-            boolean is;
+            String sd = "";
+            String pd = "";
+            String cp = "";
+            boolean ie = false;
+            boolean is = false;
             // only take the first string since all the data is saved in the first string
             if(tableCursor.moveToNext()){
                 // gameData = tableCursor.getString(0);
@@ -71,53 +69,74 @@ public class LoadAdventure extends AppCompatActivity {
                 is = tableCursor.getInt(4) == 1;
                 Toast.makeText(this, "Load from " + gameName, Toast.LENGTH_SHORT).show();
 
-                // open editPage activity
-                Intent intent = new Intent(LoadAdventure.this, EditMain.class);
-                intent.putExtra("new", false);
-                intent.putExtra("fromLoad", true);
-                intent.putExtra("shapeDict", sd);
-                intent.putExtra("pageDict", pd);
-                intent.putExtra("curPage", cp);
-                intent.putExtra("isEdit", ie);
-                intent.putExtra("isSaved", is);
-                startActivity(intent);
             }else{
                 Toast.makeText(this, "Error in retrieving data", Toast.LENGTH_SHORT).show();
             }
+            // open editPage activity
+            Intent intent = new Intent(LoadAdventure.this, EditMain.class);
+            intent.putExtra("new", false);
+            intent.putExtra("fromLoad", true);
+            intent.putExtra("shapeDict", sd);
+            intent.putExtra("pageDict", pd);
+            intent.putExtra("curPage", cp);
+            intent.putExtra("isEdit", ie);
+            intent.putExtra("isSaved", is);
+            startActivity(intent);
         }
+        db.close();
     }
+
     private void showSavings(String tableName){
-        String selectTable;
-        selectTable = "SELECT * from " + tableName;
-        Cursor tableCursor = db.rawQuery(selectTable, null);
+        System.out.println("showSaving");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
+        String selectTableStr = "SELECT * from " + tableName + ";";
+        Cursor tableCursor = db.rawQuery(selectTableStr, null);
         String[] fromArray = {"name"};
         int[] toArray = {android.R.id.text1};
         adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_activated_1,
                 tableCursor, fromArray, toArray, 0);
         ListView listView = findViewById(R.id.loadListView);
         listView.setAdapter(adapter);
+        db.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adapter != null && adapter.getCursor() != null) {
+            adapter.getCursor().close();
+        }
+        super.onDestroy();
     }
 
     // reset the Database + refresh list
     public void onReset(View view) {
+        System.out.println("onReset");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
         String resetStr = "DROP TABLE IF EXISTS games;";
         db.execSQL(resetStr);
         resetDatabase();
         refreshList();
+        db.close();
     }
 
     // refresh the listView
     public void refreshList(){
-        String selectTable = "SELECT name from " + tableName;
+        System.out.println("refreshList");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
+        String selectTable = "SELECT * from " + tableName + ";";
         Cursor tableCursor = db.rawQuery(selectTable, null);
         adapter.changeCursor(tableCursor);
         listView.setItemChecked(-1, true);
         listView.invalidateViews();
+        tableCursor.close();
+        db.close();
     }
 
     // delete the created map from list + refresh List.
     public void onDelete(View view){
-        ListView listView = (ListView) findViewById(R.id.loadListView);
+        System.out.println("onDelete");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
+        ListView listView = findViewById(R.id.loadListView);
         int pos = listView.getCheckedItemPosition();
         if(pos == AdapterView.INVALID_POSITION){
             Toast.makeText(this,
@@ -136,49 +155,28 @@ public class LoadAdventure extends AppCompatActivity {
                     +"';";
             try{
                 db.execSQL(sqlStr);
-                Toast.makeText(this,
-                        "Successfully delete " + gameName,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Successfully delete " + gameName, Toast.LENGTH_SHORT).show();
                 refreshList();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        db.close();
     }
 
     // reset the database
     private void resetDatabase() {
+        System.out.println("resetDatabase");
+        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
         String setupStr = "CREATE TABLE games ("
-                + "name TEXT, shapeDict TEXT, pageDict TEXT, curPage TEXT, isEdit int, isSaved int, "
+                + "name TEXT, shapeDict TEXT, pageDict TEXT, curPage TEXT, isEdit INTEGER, isSaved INTEGER, "
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT"
                 + ");";
         System.err.println(setupStr);
         db.execSQL(setupStr);
-        Toast.makeText(getApplicationContext(),
-                "Database Reset.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Database Reset.", Toast.LENGTH_SHORT).show();
+        db.close();
     }
-
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.load_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Intent intent;
-        switch (id){
-            case R.id.select_mode:
-                intent = new Intent(this, EditMain.class);
-                startActivity(intent);
-                break;
-        }
-        return true;
-    }
-    */
 }
 
 

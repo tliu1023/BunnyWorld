@@ -1,6 +1,5 @@
 package cs108.stanford.edu.bunnyworldeditor;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,13 +11,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class EditScript extends Activity {
+public class EditScript extends AppCompatActivity {
 
     private Docs d;
     private Shape currShape;

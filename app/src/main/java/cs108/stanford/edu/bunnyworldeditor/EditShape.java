@@ -1,6 +1,5 @@
 package cs108.stanford.edu.bunnyworldeditor;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,11 +15,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class EditShape extends Activity {
+public class EditShape extends AppCompatActivity {
     private Docs d;
     private Page currPage;
     private Shape currShape;

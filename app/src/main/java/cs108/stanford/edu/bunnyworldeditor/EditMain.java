@@ -1,7 +1,6 @@
 package cs108.stanford.edu.bunnyworldeditor;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +16,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class EditMain extends AppCompatActivity {
-    SQLiteDatabase db;
     Docs d = new Docs();
     // final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_main);
+
         // open database
-        db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
         System.out.println("enter EditMain");
+
         // initialize docs
         Intent intent = getIntent();
         if(intent.getBooleanExtra("new", false)){
@@ -35,27 +36,12 @@ public class EditMain extends AppCompatActivity {
         if(intent.getBooleanExtra("fromLoad",false)){
             // else load from previous example
             System.out.println("start loading");
-//            String gameName = intent.getStringExtra("gameName");
-//            String query = "SELECT gamesData FROM games WHERE name = '" + gameName + "';";
-//            Cursor cursor = db.rawQuery(query,null);
-//            System.out.println("count: " + cursor.getCount());
-
-            // create a docs from database
-//            intent.putExtra("shapeDict", sd);
-//            intent.putExtra("pageDict", pd);
-//            intent.putExtra("curPage", cp);
-//            intent.putExtra("isEdit", ie);
-//            intent.putExtra("isSaved", is);
             String sd = intent.getStringExtra("shapeDict");
             String pd = intent.getStringExtra("pageDict");
             String cp = intent.getStringExtra("curPage");
             Boolean ie = intent.getBooleanExtra("isEdit", false);
             Boolean is = intent.getBooleanExtra("isSaved", false);
 
-//            String json = "";
-//            if(cursor.moveToNext()){
-//                json = cursor.getString(0);
-//            }
             Gson gson = new Gson();
             HashMap<String, Shape> shapeDict = gson.fromJson(sd, new TypeToken<HashMap<String, Shape>>() {}.getType());
             HashMap<String, Page> pageDict = gson.fromJson(pd, new TypeToken<HashMap<String, Page>>() {}.getType());
@@ -69,9 +55,6 @@ public class EditMain extends AppCompatActivity {
             System.out.println("Read docs finished");
             mySingleton.getInstance().setDocStored(d);
         }
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_main);
 
         Button copyShape =  findViewById(R.id.button_copyShape);
         Button clearShape =  findViewById(R.id.button_clear);
@@ -224,7 +207,5 @@ public class EditMain extends AppCompatActivity {
         Intent intent = new Intent(this, DrawActivity.class);
         startActivity(intent);
     }
-
-
 }
 

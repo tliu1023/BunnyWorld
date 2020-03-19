@@ -22,6 +22,10 @@ public class AddPage extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width * 0.8), (int)(height * 0.3));
+
+        EditText pageNameText = findViewById(R.id.newPageName);
+        int pageNum = mySingleton.getInstance().getDocStored().pageDict.size();
+        pageNameText.setText("Page" + (pageNum + 1));
     }
 
     public void onAddNewPage(View view){
