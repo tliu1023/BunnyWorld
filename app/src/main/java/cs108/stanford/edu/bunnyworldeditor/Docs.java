@@ -364,6 +364,22 @@ public class Docs implements Serializable {
     public boolean isEdit;
     public boolean isSaved;
 
+    public HashMap<String, Shape> getShapeDict() {
+        return shapeDict;
+    }
+
+    public void setShapeDict(HashMap<String, Shape> shapeDict) {
+        this.shapeDict = shapeDict;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
+    }
+
+    public void setSaved(boolean saved) {
+        isSaved = saved;
+    }
+
     public Docs(){
         shapeDict = new HashMap<>();
         pageDict = new HashMap<>();
@@ -701,4 +717,12 @@ public class Docs implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Docs{" +
+                "shapeDict=" + shapeDict +
+                ", pageDict=" + pageDict +
+                ", curPage=" + curPage +
+                '}';
+    }
 }

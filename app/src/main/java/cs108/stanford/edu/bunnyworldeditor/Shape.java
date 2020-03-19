@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +32,7 @@ public class Shape implements Serializable {
     private String imgPath;
     private boolean clickable;
     private boolean active;
-    private boolean selected;
+    public boolean selected;
     private String script;
     private Paint stokepaint = new Paint();
     private Paint greypaint = new Paint();
@@ -78,7 +80,25 @@ public class Shape implements Serializable {
         canBeDroppedOn = false;
         isInPossession = false;
         alphaTransparencyPaint.setAlpha(120);
+    }
 
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Shape)) {
+            return false;
+        }
+        Shape temp = (Shape) obj;
+        return temp.hashCode() == this.hashCode() &&
+                temp.width == this.width &&
+                temp.height == this.height &&
+                temp.xCoor == this.xCoor &&
+                temp.yCoor == this.yCoor;
     }
 
     public String getId() {
@@ -255,36 +275,13 @@ public class Shape implements Serializable {
         return null;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("name:"+this.id);
-        sb.append("|width:"+this.width);
-        sb.append("|height:"+this.height);
-        sb.append("|positionX:"+this.xCoor);
-        sb.append("|positionY:"+this.yCoor);
-        sb.append("|movable:"+movable);
-        sb.append("|visable:"+visible);
-        sb.append("|text:"+text);
-        sb.append("|fontSize:"+fontSize);
-        sb.append("|fontColor:"+this.fontColor);
         sb.append("|imagePath:"+imgPath);
-        sb.append("|clickable:"+clickable);
-        sb.append("|active:"+active);
         sb.append("|selected:"+selected);
-        sb.append("|script:"+script);
-        sb.append("|toBeDroppedOn"+toBeDroppedOn);
-        sb.append("|canBeDroppedOn"+canBeDroppedOn);
-        sb.append("|isInPossession"+isInPossession);
-
-        sb.append("|dependShape:");
-        for(String s : relatedShapes){
-            sb.append(s);
-            sb.append("^");
-        }
         String s = sb.toString();
-        if(!relatedShapes.isEmpty()){
-            return s.substring(0, s.length()-1);
-        }
         return s;
     }
 
@@ -362,13 +359,6 @@ public class Shape implements Serializable {
 
     // show on canvas
     public void drawPic(Canvas canvas, Context context) {
-//        // if shape is not visible
-//        if ((!visible) && !mySingleton.getInstance().docStored.isEdit) {
-////        if (!mySingleton.getInstance().docStored.isEdit) {
-//            System.out.println("visible==false");
-//            hideShapeHelper(canvas, context);
-//            return;
-//        }
         // if shape is text
         if (text.length() != 0) {
             Paint paint = new Paint();

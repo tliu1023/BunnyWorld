@@ -36,7 +36,7 @@ public class SaveEditGame extends AppCompatActivity {
         // Determine which table to save to
         Intent intent = getIntent();
         overwriteGameName = intent.getStringExtra("gameName");
-        ((EditText) findViewById(R.id.nameText)).setText(overwriteGameName);
+        ((EditText) findViewById(R.id.saveNameText)).setText(overwriteGameName);
         isEdit = intent.getBooleanExtra("isEdit", false);
 
     }
@@ -44,10 +44,10 @@ public class SaveEditGame extends AppCompatActivity {
     public void onSave(View view){
         db = openOrCreateDatabase("GamesDB", MODE_PRIVATE,null);
         mySingleton.getInstance().docStored.isSaved=true;
-        EditText nameText = (EditText) findViewById(R.id.nameText);
+        EditText nameText = findViewById(R.id.saveNameText);
 
         String gameName = nameText.getText().toString();
-        Intent intent = getIntent();
+        // Intent intent = getIntent();
         String checkStr = "SELECT name from " + tableName +";";
         Cursor tableCursor = db.rawQuery(checkStr, null);
         while (tableCursor.moveToNext()) {
@@ -65,16 +65,25 @@ public class SaveEditGame extends AppCompatActivity {
             }
         }
         Gson gson = new Gson();
-        String json = gson.toJson(mySingleton.getInstance().docStored);
+        String json1 = gson.toJson(mySingleton.getInstance().getDocStored().getShapeDict());
+        String json2 = gson.toJson(mySingleton.getInstance().getDocStored().getPageDict());
+        String json3 = gson.toJson(mySingleton.getInstance().getDocStored().getCurPage());
         String sqlCommand = "INSERT INTO games VALUES ('"
                 + gameName
                 + "','"
-                + json
-                + "',NULL);";
+                + json1
+                + "','"
+                + json2
+                + "','"
+                + json3
+                + "',"
+                + 1
+                + ","
+                + 1
+                + ",NULL);";
         System.err.println(sqlCommand);
         db.execSQL(sqlCommand);
         System.err.println("Finished");
-        System.out.println(sqlCommand);
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Saved to DataBase", Toast.LENGTH_SHORT);
         toast.show();

@@ -13,16 +13,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LoadAdventure extends AppCompatActivity {
 
 
     SQLiteDatabase db;
     String tableName = "games";
-//    boolean isEdit;
-//    boolean isSaving;
     SimpleCursorAdapter adapter;
     ListView listView;
 
@@ -43,15 +38,6 @@ public class LoadAdventure extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private List<String> loadNames() {
-        List<String> names = new ArrayList<>();
-        String query = "SELECT name FROM games";
-        Cursor cursor = db.rawQuery( query,null);
-        while (cursor.moveToNext()) {
-            names.add(cursor.getString(0));
-        }
-        return names;
-    }
 
     public void onLoad(View view){
         ListView listView = findViewById(R.id.loadListView);
@@ -64,32 +50,42 @@ public class LoadAdventure extends AppCompatActivity {
         } else{
             TextView selectedTextView = (TextView) adapter.getView(pos, null, listView);
             String gameName = selectedTextView.getText().toString();
-            String sqlStr = "SELECT gamesData from "
+            String sqlStr = "SELECT shapeDict, pageDict, curPage, isEdit, isSaved from "
                     + tableName
                     + " where name = '"
                     + gameName
                     +"';";
             Cursor tableCursor = db.rawQuery(sqlStr, null);
-            String gameData;
-
+            String sd;
+            String pd;
+            String cp;
+            boolean ie;
+            boolean is;
             // only take the first string since all the data is saved in the first string
             if(tableCursor.moveToNext()){
-                gameData = tableCursor.getString(0);
+                // gameData = tableCursor.getString(0);
+                sd = tableCursor.getString(0);
+                pd = tableCursor.getString(1);
+                cp = tableCursor.getString(2);
+                ie = tableCursor.getInt(3) == 1;
+                is = tableCursor.getInt(4) == 1;
                 Toast.makeText(this, "Load from " + gameName, Toast.LENGTH_SHORT).show();
 
                 // open editPage activity
                 Intent intent = new Intent(LoadAdventure.this, EditMain.class);
                 intent.putExtra("new", false);
                 intent.putExtra("fromLoad", true);
-                intent.putExtra("gameData", gameData);
-                intent.putExtra("gameName", gameName);
+                intent.putExtra("shapeDict", sd);
+                intent.putExtra("pageDict", pd);
+                intent.putExtra("curPage", cp);
+                intent.putExtra("isEdit", ie);
+                intent.putExtra("isSaved", is);
                 startActivity(intent);
             }else{
                 Toast.makeText(this, "Error in retrieving data", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
     private void showSavings(String tableName){
         String selectTable;
         selectTable = "SELECT * from " + tableName;
@@ -112,7 +108,7 @@ public class LoadAdventure extends AppCompatActivity {
 
     // refresh the listView
     public void refreshList(){
-        String selectTable = "SELECT * from " + tableName;
+        String selectTable = "SELECT name from " + tableName;
         Cursor tableCursor = db.rawQuery(selectTable, null);
         adapter.changeCursor(tableCursor);
         listView.setItemChecked(-1, true);
@@ -153,7 +149,7 @@ public class LoadAdventure extends AppCompatActivity {
     // reset the database
     private void resetDatabase() {
         String setupStr = "CREATE TABLE games ("
-                + "name TEXT, gamesData TEXT,"
+                + "name TEXT, shapeDict TEXT, pageDict TEXT, curPage TEXT, isEdit int, isSaved int, "
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT"
                 + ");";
         System.err.println(setupStr);

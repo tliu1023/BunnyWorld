@@ -3,21 +3,57 @@ package cs108.stanford.edu.bunnyworldeditor;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Page implements Serializable {
     public String name;
-    public Shape selectedShape = null;
+    public Shape selectedShape;
     public ArrayList<Shape> shapes;
+    public HashSet<String> relatedShapes;
+    public int backgroundId;
 
+    public Page(String name) {
+        this.name = name;
+        this.selectedShape = null;
+        this.shapes = new ArrayList<Shape> ();
+        this.relatedShapes = new HashSet<> ();
+        this.backgroundId = 2131230816;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode() + backgroundId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Page)) {
+            return false;
+        }
+        Page temp = (Page) obj;
+        return temp.name.equals(this.name) &&
+                temp.relatedShapes.equals(this.relatedShapes) &&
+                temp.shapes.equals(this.shapes) &&
+                temp.backgroundId == this.backgroundId;
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "name='" + name + '\'' +
+                ", selectedShape=" + selectedShape +
+                ", shapes=" + shapes +
+                ", backgroundId=" + backgroundId +
+                '}';
+    }
     public ArrayList<Shape> getShapes() {
         return shapes;
     }
-
-    public HashSet<String> relatedShapes;
-    public int backgroundId = 2131230816;
 
     public int getBackgroundId() {
         return backgroundId;
@@ -33,12 +69,6 @@ public class Page implements Serializable {
 
     public void setRelatedShapes(HashSet<String> relatedShapes) {
         this.relatedShapes = relatedShapes;
-    }
-
-    public Page(String name) {
-        this.name = name;
-        shapes = new ArrayList<Shape> ();
-        relatedShapes = new HashSet<> ();
     }
 
     public String getName() {

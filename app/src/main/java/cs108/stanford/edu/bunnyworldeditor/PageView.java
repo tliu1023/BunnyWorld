@@ -16,28 +16,25 @@ public class PageView extends View {
 
     private ArrayList<Shape> shapes;
     private HashMap<String, Page> pageMap;
-    // private ArrayList<Shape> possessionList;
-    private String pageName = mySingleton.getInstance().docStored.curPage.name;
-    private Shape selectedShape = mySingleton.getInstance().docStored.curPage.getSelectedShape();
-    private Canvas canvas;
+    private String pageName;
+    private Shape selectedShape;
     private Context context;
-    private int bgId = mySingleton.getInstance().docStored.curPage.backgroundId;
-    private Bitmap bgImage = getImage(bgId);
-
-
+    private int bgId;
+    private Bitmap bgImage;
     private float x1, x2, y1, y2;
     private float pageWidth, pageHeight;
-    // private float yLine;
-
-    // private Paint outlinePaint;
 
     public PageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        System.out.println(mySingleton.getInstance().getDocStored().toString());
+        this.pageName = mySingleton.getInstance().getDocStored().getCurPage().getName();
+        this.selectedShape = mySingleton.getInstance().getDocStored().getCurPage().getSelectedShape();
+        this.pageMap = mySingleton.getInstance().getDocStored().getPageDict();
+        this.shapes = pageMap.get(pageName).getShapes();
+        this.bgId = mySingleton.getInstance().getDocStored().getCurPage().getBackgroundId();
+        this.context = getContext();
+        this.bgImage = getImage(bgId);
 
-        pageMap = mySingleton.getInstance().docStored.pageDict;
-        shapes = pageMap.get(pageName).shapes;
-        // possessionList = new ArrayList<> ();
-        init(context);
         x1 = 0;
         x2 = 0;
         y1 = 0;
@@ -46,32 +43,17 @@ public class PageView extends View {
         pageHeight = 0;
     }
 
-    private void init(Context context) {
-        // preload resources
-        this.context = context;
-        // // define paints
-        // outlinePaint = new Paint();
-        // outlinePaint.setStyle(Paint.Style.STROKE);
-        // outlinePaint.setStrokeWidth(4.0f);
-        // outlinePaint.setColor(Color.GRAY);
-
-    }
-
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        shapes = pageMap.get(pageName).shapes;
+        shapes = pageMap.get(pageName).getShapes();
 
         // draw background
         canvas.drawBitmap(bgImage,null,new RectF(0, 0, pageWidth, pageHeight),null);
+        // canvas.setBitmap(bgImage);
         for (Shape shape: shapes) {
             shape.drawPic(canvas, context);
         }
-        // drawYLine(canvas);
-        // for (Shape shape: possessionList) {
-        //     shape.drawPic(canvas, context);
-        // }
     }
 
 
@@ -100,13 +82,11 @@ public class PageView extends View {
         return true;
     }
 
-//    private void drawYLine(Canvas canvas) {
-//        canvas.drawLine(0.0f, yLine, pageWidth, yLine, outlinePaint);
-//    }
-
     private void onTouchDown(MotionEvent event) {
         x1 = event.getX();
         y1 = event.getY();
+        Docs d = mySingleton.getInstance().getDocStored();
+        Page p = d.getCurPage();
         if (selectedShape != null) {
             if (isSelected(selectedShape, x1, y1)) {
                 return;
@@ -115,26 +95,22 @@ public class PageView extends View {
             else {
                 selectedShape.setSelected(false);
                 selectedShape = null;
-                mySingleton.getInstance().docStored.curPage.setSelectedShape(null);
+                p.setSelectedShape(null);
+                d.setCurPage(p);
+                mySingleton.getInstance().setDocStored(d);
             }
         }
         for (int i = shapes.size() - 1; i >= 0; i--) {
             Shape shape = shapes.get(i);
             if (isSelected(shape, x1, y1)) {
                 selectedShape = shape;
-                shape.setSelected(true);
-                mySingleton.getInstance().docStored.curPage.setSelectedShape(selectedShape);
+                selectedShape.setSelected(true);
+                p.setSelectedShape(selectedShape);
+                d.setCurPage(p);
+                mySingleton.getInstance().setDocStored(d);
                 break;
             }
         }
-
-        // if (selectedShape != null) {
-        //     if (!selectedShape.isMovable()) {
-        //         selectedShape = null;
-        //         selectedShape.setSelected(false);
-        //         mySingleton.getInstance().docStored.curPage.setSelectedShape(null);
-        //     }
-        // }
 
         invalidate();
     }
@@ -154,8 +130,6 @@ public class PageView extends View {
         y1 = y2;
 
         shapes.add(selectedShape);
-
-
         invalidate();
     }
 
@@ -177,20 +151,6 @@ public class PageView extends View {
         float shapeRight = selectedShape.getxCoor() + selectedShape.getWidth();
         float shapeBottom = selectedShape.getyCoor() + selectedShape.getHeight();
 
-        // // if the shape is moved to the possession list
-        // float yLine = 0.8f * pageHeight;
-        // if (shapeBottom >= yLine && shapeUp <= yLine) {
-        //     // keep it in the possession list if at least half of the height is in it
-        //     if (shapeBottom - yLine >= 0.5f * selectedShape.getHeight()) {
-        //         selectedShape.setyCoor(0.8f * pageHeight + 2.0f);
-        //         // resize the shape to fit in
-        //         selectedShape.setHeight(pageHeight - 2.0f - selectedShape.getyCoor());
-        //     }
-        //     else {
-        //         selectedShape.setyCoor(0.8f * pageHeight - 2.0f - selectedShape.getHeight());
-        //     }
-        // }
-
         // if the shape is moved outside of the boundary
         if (shapeUp < 0) {
             selectedShape.setyCoor(0);
@@ -204,29 +164,6 @@ public class PageView extends View {
         if (shapeRight > pageWidth) {
             selectedShape.setyCoor(pageWidth - selectedShape.getWidth());
         }
-
-        // // check possession list
-        // shapeBottom = selectedShape.getyCoor() + selectedShape.getHeight();
-        // ArrayList<Shape> pageShapes = pageMap.get(pageName).shapes;
-        // if (!possessionList.contains(selectedShape)) {
-        //     if (selectedShape.getyCoor() >= 0.8f * pageHeight) {
-        //         for (Shape shape : pageShapes) {
-        //             if (shape.getId() == selectedShape.getId()) {
-        //                 pageShapes.remove(shape);
-        //                 break;
-        //             }
-        //         }
-        //         possessionList.add(selectedShape);
-        //     }
-        // }
-        // else {
-        //     if (shapeBottom <= 0.8f * pageHeight) {
-        //         pageShapes.add(selectedShape);
-        //         possessionList.remove(selectedShape);
-        //     }
-        // }
-        // selectedShape.setSelected(true);
-        // mySingleton.getInstance().docStored.curPage.setSelectedShape(selectedShape);
         invalidate();
     }
 
@@ -238,22 +175,10 @@ public class PageView extends View {
         return false;
     }
 
-
-    private boolean isDroppable(Shape shape) {
-        if (shape.getActionMap().containsKey("ondrop")) {
-            return true;
-        }
-        return false;
-    }
-
-    public void changePageName(String newPageName) {
-        pageName = newPageName;
-    }
-
     public Bitmap getImage(int bgId) {
 //        String imgName = imgNames.get(bgId);
 //        int resId = getResources().getIdentifier(imgName, "drawable", context.getPackageName());
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(bgId);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) this.getContext().getResources().getDrawable(bgId);
         Bitmap bitmap = bitmapDrawable.getBitmap();
         return bitmap;
     }

@@ -469,7 +469,6 @@ public class MainActivity extends AppCompatActivity{
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
     }
 
     public void onStart(View view) {
@@ -485,16 +484,18 @@ public class MainActivity extends AppCompatActivity{
     private void setupDatabase() {
         String clearStr = "DROP TABLE IF EXISTS games;";
         db.execSQL(clearStr);
-
+        // tabel content
+        // gameName(str), shapeDict(str), pageDict(str), curPage(str), isEdit(boolean), isSaved(boolean), _id
         String setupStr = "CREATE TABLE games ("
-                + "name TEXT, gamesData TEXT,"
+                + "name TEXT, shapeDict TEXT, pageDict TEXT, curPage TEXT, isEdit INTEGER, isSaved INTEGER, "
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT"
                 + ");";
         System.err.println(setupStr);
         db.execSQL(setupStr);
     }
 
-    protected List<String> loadNames() {
+    // select all the game name from database
+    protected List<String> loadGameNames() {
         List<String> names = new ArrayList<>();
         String query = "SELECT name FROM games";
         Cursor cursor = db.rawQuery( query,null);
@@ -566,39 +567,38 @@ public class MainActivity extends AppCompatActivity{
 
     protected void setRadionButtonText(View layout) {
         //load game names
-        List<String> gameNames = loadNames();
-        int numGames = gameNames.size();
+        List<String> gameNames = loadGameNames();
         int i = 0;
 
-        RadioButton radioButton = (RadioButton) layout.findViewById(R.id.game1);
+        RadioButton radioButton;
         while (i <= 5) {
             switch(i) {
-                case 0: radioButton = (RadioButton) layout.findViewById(R.id.game1);
+                case 0: radioButton = layout.findViewById(R.id.game1);
                     if (gameNames.size() > i)
                         radioButton.setText(gameNames.get(i));
 
                     break;
-                case 1: radioButton = (RadioButton) layout.findViewById(R.id.game2);
+                case 1: radioButton = layout.findViewById(R.id.game2);
                     if (gameNames.size() > i) {
                         radioButton.setText(gameNames.get(i));
                     }
                     break;
-                case 2: radioButton = (RadioButton) layout.findViewById(R.id.game3);
+                case 2: radioButton = layout.findViewById(R.id.game3);
                     if (gameNames.size() > i) {
                         radioButton.setText(gameNames.get(i));
                     }
                     break;
-                case 3: radioButton = (RadioButton) layout.findViewById(R.id.game4);
+                case 3: radioButton = layout.findViewById(R.id.game4);
                     if (gameNames.size() > i) {
                         radioButton.setText(gameNames.get(i));
                     }
                     break;
-                case 4: radioButton = (RadioButton) layout.findViewById(R.id.game5);
+                case 4: radioButton = layout.findViewById(R.id.game5);
                     if (gameNames.size() > i) {
                         radioButton.setText(gameNames.get(i));
                     }
                     break;
-                case 5: radioButton = (RadioButton) layout.findViewById(R.id.game6);
+                case 5: radioButton = layout.findViewById(R.id.game6);
                     if (gameNames.size() > i) {
                         radioButton.setText(gameNames.get(i));
                     }
