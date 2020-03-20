@@ -134,15 +134,6 @@ public class MainActivity extends AppCompatActivity{
                     popupWindow.dismiss();
                 }
             });
-
-//            // dismiss the popup window when touched
-//            popupView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    popupWindow.dismiss();
-//                    return true;
-//                }
-//            });
         } catch (Exception e) {
             e.printStackTrace();
         }

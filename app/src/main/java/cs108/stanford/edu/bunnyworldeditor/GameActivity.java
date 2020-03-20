@@ -23,7 +23,6 @@ public class GameActivity extends AppCompatActivity {
     Docs d;
 
     protected static CountDownTimer countDownTimer;
-    protected TextView pointsText;
     protected TextView timerText;
     protected long timeLeftInMilliseconds = 120000; // 2min
 
@@ -56,7 +55,6 @@ public class GameActivity extends AppCompatActivity {
             is = tableCursor.getInt(4) == 1;
             Toast.makeText(this, "Load " + gameName, Toast.LENGTH_SHORT).show();
         }
-
 
         Gson gson = new Gson();
         HashMap<String, Shape> shapeDict = gson.fromJson(sd, new TypeToken<HashMap<String, Shape>>() {}.getType());
